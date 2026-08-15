@@ -1,0 +1,100 @@
+name: AI SQL Generator CI
+
+on:
+  push:
+    branches:
+    - main
+
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  # ============================================================
+  # BACKEND
+  # ============================================================
+
+  backend:
+
+    name: Backend - Spring Boot
+
+    runs-on: ubuntu-latest
+
+    services:
+
+      postgres:
+        image: postgres:16
+
+        env:
+          POSTGRES_DB: ai_sql_generator
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-${{ github.run_id }}-${{ github.run_attempt }}
+
+        ports:
+        - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ai_sql_generator" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    defaults:
+      run:
+        working-directory: ai-sql-generator
+
+    env:
+      DB_URL: jdbc:postgresql://localhost:5432/ai_sql_generator
+      DB_USERNAME: postgres
+      DB_PASSWORD: ci-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '25'
+        cache: maven
+
+    - name: Make Maven wrapper executable
+      run: chmod +x mvnw
+
+    - name: Run backend tests
+      run: ./mvnw -B test
+
+  # ============================================================
+  # FRONTEND
+  # ============================================================
+
+  frontend:
+
+    name: Frontend - Next.js
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: npm
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build frontend
+      run: npm run build
