@@ -1,0 +1,64 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: ai-sql-postgres
+
+    environment:
+      POSTGRES_DB: ai_sql_generator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ai_sql_generator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  backend:
+    build:
+      context: ./ai-sql-generator
+      dockerfile: Dockerfile
+
+    container_name: ai-sql-backend
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/ai_sql_generator
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD}
+      OLLAMA_URL: http://host.docker.internal:11434
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    container_name: ai-sql-frontend
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+
+    depends_on:
+      - backend
+
+
+volumes:
+  postgres-data:

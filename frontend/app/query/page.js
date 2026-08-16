@@ -16,8 +16,6 @@ export default function QueryPage() {
 
   const [error, setError] = useState("");
 
-    const [originalQuestion, setOriginalQuestion] = useState("");
-
   async function generateSQL(query = question) {
 
   if (typeof query !== "string" || !query.trim()) {
@@ -123,8 +121,7 @@ export default function QueryPage() {
           </h2>
 
           <p className="text-zinc-400 mt-4 leading-7">
-            Describe the result you need in everyday language. The backend
-            will generate the SQL and return the result.
+            Describe what you need in everyday language. The AI will generate the SQL and explain what the query does.
           </p>
 
         </div>
@@ -154,7 +151,6 @@ export default function QueryPage() {
 
             <button
               onClick={() => {
-                setOriginalQuestion(question);
                 generateSQL(question);
               }}
               disabled={loading}
@@ -179,66 +175,55 @@ export default function QueryPage() {
 
         )}
 
-        {/* Clarification
+        {!data && !loading && !error && (
+          <div className="glass-card rounded-2xl p-6 mt-6">
 
-        {data &&
-          data.status === "clarification_required" && (
+            <p className="text-xs uppercase tracking-[.2em] text-zinc-600">
+              Examples
+            </p>
 
-            <div className="status-warn mt-7 rounded-2xl p-6">
+            <div className="grid sm:grid-cols-2 gap-3 mt-4">
 
-              <p className="text-xs uppercase tracking-[.2em] text-zinc-500 mb-2">
-                Need more detail
-              </p>
+              <button
+                onClick={() =>
+                  setQuestion("Show all departments")
+                }
+                className="text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-4 py-3 text-sm text-zinc-300 transition"
+              >
+                Show all departments
+              </button>
 
-              <h3 className="font-semibold text-xl">
-                Clarification needed
-              </h3>
+              <button
+                onClick={() =>
+                  setQuestion("Show all employees")
+                }
+                className="text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-4 py-3 text-sm text-zinc-300 transition"
+              >
+                Show all employees
+              </button>
 
-              <p className="text-zinc-300 mt-3 leading-6">
-                {data.clarificationQuestion ||
-                  data.question}
-              </p>
+              <button
+                onClick={() =>
+                  setQuestion("Find students with marks greater than 80")
+                }
+                className="text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-4 py-3 text-sm text-zinc-300 transition"
+              >
+                Find students with marks greater than 80
+              </button>
 
-              <div className="mt-5 grid gap-2">
-
-                {data.options?.map(
-  (option, index) => {
-
-    const optionText =
-      typeof option === "string"
-        ? option
-        : option.label || option.value || String(option);
-
-    return (
-      <button
-        key={index}
-        onClick={() => {
-
-  const optionText =
-    typeof option === "string"
-      ? option
-      : option.label || option.value || String(option);
-
-  const clarifiedQuestion =
-    `${originalQuestion}. ${optionText}`;
-
-  setQuestion(clarifiedQuestion);
-
-  generateSQL(clarifiedQuestion);
-}}
-        className="text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-4 py-3 text-sm text-zinc-200 transition"
-      >
-        {optionText}
-      </button>
-    );
-  }
-)}
-
-              </div>
+              <button
+                onClick={() =>
+                  setQuestion("Show products sorted by price")
+                }
+                className="text-left rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-4 py-3 text-sm text-zinc-300 transition"
+              >
+                Show products sorted by price
+              </button>
 
             </div>
 
-          )} */}
+          </div>
+        )}
 
         {/* SQL */}
 

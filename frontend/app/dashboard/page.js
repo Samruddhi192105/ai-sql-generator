@@ -15,9 +15,9 @@ export default function DashboardPage() {
   }, [router]);
 
   function handleLogout() {
-    localStorage.removeItem("token");
-    router.push("/login");
-  }
+  localStorage.removeItem("token");
+  router.replace("/login");
+ }
 
   return (
     <main className="app-shell min-h-screen">

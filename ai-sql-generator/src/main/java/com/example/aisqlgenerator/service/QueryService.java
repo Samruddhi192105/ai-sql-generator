@@ -4,6 +4,7 @@ import com.example.aisqlgenerator.dto.QueryRequest;
 import com.example.aisqlgenerator.model.DatabaseSchema;
 import com.example.aisqlgenerator.model.QueryResponse;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +27,6 @@ public class QueryService {
         this.validationService = validationService;
     }
 
-
     public QueryResponse processQuery(
             QueryRequest request) {
 
@@ -44,10 +44,7 @@ public class QueryService {
         }
 
         // --------------------------------------------------------
-        // 3. Generate SQL directly
-        //
-        // NO ambiguity detection.
-        // NO clarification AI call.
+        // 2. Generate SQL
         // --------------------------------------------------------
 
         String sql =
@@ -55,34 +52,23 @@ public class QueryService {
                         request.getQuestion()
                 );
 
-
         // --------------------------------------------------------
-        // 4. Validate SQL syntax
+        // 3. Validate SQL syntax
         // --------------------------------------------------------
 
         validationService.validate(sql);
 
-
         // --------------------------------------------------------
-        // 5. Explain SQL
+        // 4. Explain SQL
         // --------------------------------------------------------
 
         String explanation =
                 aiService.explainSQL(sql);
 
-
         // --------------------------------------------------------
-        // 6. Save generated query to history
+        // 5. Save generated query to history
         // --------------------------------------------------------
 
-        /*
-         * Keep your existing history functionality.
-         *
-         * The exact authenticated-user handling depends on
-         * your existing security implementation.
-         */
-
-        /*
         Long userId =
                 (Long) SecurityContextHolder
                         .getContext()
@@ -95,11 +81,9 @@ public class QueryService {
                 sql,
                 "SUCCESS"
         );
-        */
-
 
         // --------------------------------------------------------
-        // 7. Return SQL + explanation
+        // 6. Return SQL + explanation
         //
         // No database rows are returned.
         // --------------------------------------------------------

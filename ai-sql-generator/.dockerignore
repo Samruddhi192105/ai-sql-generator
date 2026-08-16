@@ -1,0 +1,10 @@
+.git/
+.idea/
+.vscode/
+*.log
+src/
+pom.xml
+mvnw
+mvnw.cmd
+.mvn/
+target/*.jar.original
