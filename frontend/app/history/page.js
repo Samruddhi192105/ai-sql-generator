@@ -8,6 +8,14 @@ export default function HistoryPage() {
 
   const router = useRouter();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
+
   const [history, setHistory] = useState([]);
 
   const [loading, setLoading] = useState(true);

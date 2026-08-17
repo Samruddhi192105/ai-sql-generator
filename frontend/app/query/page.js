@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "../../src/lib/api";
 
 export default function QueryPage() {
 
   const router = useRouter();
+
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    router.push("/login");
+  }
+}, [router]);
 
   const [question, setQuestion] = useState("");
 

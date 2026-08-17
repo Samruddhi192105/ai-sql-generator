@@ -21,18 +21,6 @@ services:
       timeout: 5s
       retries: 10
 
-
-  ollama:
-    image: ollama/ollama:latest
-    container_name: ai-sql-ollama
-
-    ports:
-      - "11434:11434"
-
-    volumes:
-      - ollama-data:/root/.ollama
-
-
   backend:
     build:
       context: ./ai-sql-generator
@@ -47,14 +35,10 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/ai_sql_generator
       DB_USERNAME: postgres
       DB_PASSWORD: ${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD}
-      OLLAMA_URL: http://ollama:11434
 
     depends_on:
       postgres:
         condition: service_healthy
-      ollama:
-        condition: service_started
-
 
   frontend:
     build:
@@ -72,4 +56,3 @@ services:
 
 volumes:
   postgres-data:
-  ollama-data:
