@@ -164,14 +164,19 @@ Stop the application:
 docker compose down
 
 Environment Configuration
-The backend uses environment variables for database configuration:
-DB_URL
-DB_USERNAME
-DB_PASSWORD
+Copy `ai-sql-generator/.env.example` to `ai-sql-generator/.env` and set
+`DB_PASSWORD`, `POSTGRES_PASSWORD`, and `JWT_SECRET` to private values.
+Use the same database password for `DB_PASSWORD` and `POSTGRES_PASSWORD`.
+`JWT_SECRET` must be at least 32 bytes long. Do not commit `.env`.
+For an existing PostgreSQL data volume, changing `POSTGRES_PASSWORD` does not
+change the password already stored in the database; update the database role
+password separately.
 
 The frontend uses:
 NEXT_PUBLIC_API_URL
-Environment files containing secrets should not be committed to GitHub.
+Environment files containing secrets should not be committed to GitHub. If
+credentials have already been pushed to GitHub, rotate them; removing a value
+from the latest commit does not remove it from Git history.
 
 Screenshots:
 <img width="959" height="410" alt="Screenshot 2026-08-17 164314" src="https://github.com/user-attachments/assets/5f3d97a7-6184-43a1-b6c9-e3ae711b5d83" />

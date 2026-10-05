@@ -1,7 +1,6 @@
 package com.example.aisqlgenerator.service;
 
 import com.example.aisqlgenerator.dto.QueryRequest;
-import com.example.aisqlgenerator.model.DatabaseSchema;
 import com.example.aisqlgenerator.model.QueryResponse;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,18 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class QueryService {
 
-    private final SchemaService schemaService;
     private final AIService aiService;
     private final QueryHistoryService historyService;
     private final ValidationService validationService;
 
     public QueryService(
-            SchemaService schemaService,
             AIService aiService,
             QueryHistoryService historyService,
             ValidationService validationService) {
 
-        this.schemaService = schemaService;
         this.aiService = aiService;
         this.historyService = historyService;
         this.validationService = validationService;

@@ -4,10 +4,12 @@ services:
     image: postgres:17
     container_name: ai-sql-postgres
 
+    env_file:
+      - ./ai-sql-generator/.env
+
     environment:
       POSTGRES_DB: ai_sql_generator
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD}
 
     ports:
       - "5432:5432"
@@ -28,13 +30,15 @@ services:
 
     container_name: ai-sql-backend
 
+    env_file:
+      - ./ai-sql-generator/.env
+
     ports:
       - "8080:8080"
 
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/ai_sql_generator
       DB_USERNAME: postgres
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD}
 
     depends_on:
       postgres:
