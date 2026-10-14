@@ -1,4 +1,4 @@
-# AI SQL Generator
+# Prompt2SQL - AI SQL Generator
 
 An AI-powered web application that converts natural-language requests into SQL queries using **Java Spring Boot, Next.js, PostgreSQL, and Ollama**.
 
